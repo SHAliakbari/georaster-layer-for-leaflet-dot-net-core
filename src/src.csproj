@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <AssemblyName>georaster_layer_for_leaflet_dot_net_core</AssemblyName>
     <RootNamespace>georaster_layer_for_leaflet_dot_net_core</RootNamespace>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>GeoTiff Tile Generator</Title>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,10 @@
     <PackageReference Include="ProjNet" Version="2.0.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.7" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>
