@@ -27,7 +27,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
         public GeoRaster[]? georasters;
         public GeoRaster? georaster;
         public bool noWrap;
-        public Action<dynamic> customDrawFunction;
+        public Action<CustomDrawFunctionModel> customDrawFunction;
 
         public void Dispose()
         {
@@ -902,15 +902,15 @@ namespace georaster_layer_for_leaflet_dot_net_core
 
                                         if (options.customDrawFunction != null)
                                         {
-                                            options.customDrawFunction(new
+                                            options.customDrawFunction(new CustomDrawFunctionModel
                                             {
-                                                canvas,
-                                                values,
+                                                Canvas = canvas,
+                                               Values = values,
                                                 //context,
-                                                x,
-                                                y,
-                                                width,
-                                                height,
+                                                x= x,
+                                                y=y,
+                                                width=width,
+                                                height=height,
                                                 rasterX = xInRasterPixels,
                                                 rasterY = yInRasterPixels,
                                                 sampleX = w,

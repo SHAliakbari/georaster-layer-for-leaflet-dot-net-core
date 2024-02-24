@@ -25,7 +25,6 @@ namespace WebApp
         {
             geoLayer = geoLayers.Get(geoTiffPath, () =>
             {
-
                 using Dataset dataset = Gdal.Open(geoTiffPath, Access.GA_ReadOnly);
                 if (dataset == null)
                 {
@@ -105,33 +104,17 @@ namespace WebApp
                         values = bytes.ToArray()
 
                     },
-                    customDrawFunction= (
-                //{g
-                //            tile,
-                //            values,
-                //            context,
-                //            x,
-                //            y,
-                //            width,
-                //            height,
-                //            rasterX,
-                //            rasterY,
-                //            sampleX,
-                //            sampleY,
-                //            sampledRaster
-                //        }
-                customDrawFunctionModel a
-                ) =>
+                    customDrawFunction= (CustomDrawFunctionModel model) =>
                     {
                         SKColor color = SKColors.Transparent;
 
-                        if (a.values.Length == 3)
+                        if (model.Values.Length == 3)
                         {
-                            color = new SKColor((byte)a.values[0], (byte)a.values[1], (byte)a.values[2]);
+                            color = new SKColor((byte)model.Values[0], (byte)model.Values[1], (byte)model.Values[2]);
                         }
-                        if (a.values.Length == 1)
+                        if (model.Values.Length == 1)
                         {
-                            color = new SKColor(a.values[0]);
+                            color = new SKColor(model.Values[0]);
                         }
 
                         using SKPaint sKPaint = new SKPaint()
@@ -140,17 +123,14 @@ namespace WebApp
                             IsAntialias = true,
                             Style = SKPaintStyle.Fill
                         };
-                        a.Canvas.DrawRect((int)a.x, (int)a.y, (int)a.width, (int)a.height, sKPaint);
+                        model.Canvas.DrawRect((int)model.x, (int)model.y, (int)model.width, (int)model.height, sKPaint);
 
                     },
                     debugLevel=4,
                     resolution= 256 // optional parameter for adjusting display resolution
                 };
 
-
-
                 geoLayer tmp = new geoLayer(geoRasterLayerOptions);
-
                 tmp.initialize(geoRasterLayerOptions);
                 return tmp;
 
