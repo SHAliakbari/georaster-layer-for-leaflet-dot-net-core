@@ -1,4 +1,8 @@
+using OSGeo.GDAL;
 using WebApp;
+
+Gdal.AllRegister();
+MaxRev.Gdal.Core.Proj.Configure();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +13,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddMemoryCache();
 builder.Services.AddHostedService<GeoLayers>();
 builder.Services.AddSingleton<GeoLayers>();
+
+
 
 var app = builder.Build();
 

@@ -1,10 +1,68 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map Example</title>
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Include Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 400px;
+        }
+    </style>
 </head>
 <body>
-    this is client app
+
+    <div id="map"></div>
+
+    <script>
+
+
+        function tileLoadStart(event) {
+            var tile = event.tile;
+            if (!tile.src_data && !tile.processed && !tile.error) {
+                tile.src_data = tile.src;
+                // Set the source of the tile to the loading image
+                tile.src = '/loading.gif'; // Replace with the path to your loading image
+                tile.style.padding = "75px"
+            }
+        }
+
+        function tileLoad(event) {
+            var tile = event.tile;
+            if (tile.src_data && !tile.processed && !tile.error) {
+                tile.style.padding = "";
+                // Reset the source of the tile to the actual tile image
+                tile.src = tile.src_data;
+                tile.processed = true;
+            }
+        }
+
+        // Create a Leaflet map centered at a specific location (e.g., [latitude, longitude])
+        var map = L.map('map').setView([43.7407, -79.0707], 8);
+
+        // Add a base map (e.g., OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add a foreground map or additional layers if needed
+        // Example: Adding another tile layer (you can replace this with your specific foreground map)
+        var layer = L.tileLayer('/home/{x}/{y}/{z}.png', {
+            attribution: 'Foreground Map',
+            bounds: [[43.2356, -78.4162], [44.2466, -79.7475]]
+
+        });
+
+        layer.on('tileloadstart', tileLoadStart);
+
+        layer.on('tileload', tileLoad);
+
+        layer.addTo(map)
+    </script>
+
 </body>
 </html>

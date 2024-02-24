@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\src\src.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="tiffFiles\" />
+  </ItemGroup>
+
 </Project>

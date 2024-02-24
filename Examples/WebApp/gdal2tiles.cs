@@ -120,7 +120,7 @@ namespace WebApp
                 //            sampleY,
                 //            sampledRaster
                 //        }
-                dynamic a
+                customDrawFunctionModel a
                 ) =>
                     {
                         SKColor color = SKColors.Transparent;
@@ -129,14 +129,18 @@ namespace WebApp
                         {
                             color = new SKColor((byte)a.values[0], (byte)a.values[1], (byte)a.values[2]);
                         }
-                        var canvas = (a.canvas as SKCanvas);
+                        if (a.values.Length == 1)
+                        {
+                            color = new SKColor(a.values[0]);
+                        }
+
                         using SKPaint sKPaint = new SKPaint()
                         {
                             Color = color,
                             IsAntialias = true,
                             Style = SKPaintStyle.Fill
                         };
-                        canvas.DrawRect((int)a.x, (int)a.y, (int)a.width, (int)a.height, sKPaint);
+                        a.Canvas.DrawRect((int)a.x, (int)a.y, (int)a.width, (int)a.height, sKPaint);
 
                     },
                     debugLevel=4,
@@ -158,7 +162,7 @@ namespace WebApp
         {
         }
 
-        
+
         public byte[] CreateTile(int zoom, int x, int y)
         {
             if (geoLayer._isValidTile(new Coords { x=x, y=y, z=zoom }))
