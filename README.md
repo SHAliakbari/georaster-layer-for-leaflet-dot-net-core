@@ -5,15 +5,15 @@ GeoRasterLayer-for-Leaflet-Dot-Net-Core simplifies geospatial workflows by seaml
 
 Key Features:
 
-Effortless GeoTIFF Rendering: Convert GeoTIFFs into a format compatible with GeoRasterLayer for efficient display on tile-based maps.
-Server-Side Processing Power: Utilize ASP.NET Core’s robust backend to handle requests, deliver geospatial data, and ensure smooth performance, scalability, and security.
-Seamless Tile-Based Map Integration: Integrate rendered raster layers effortlessly into your tile-based maps, providing a familiar and interactive experience for map users.
-Customization Options: Fine-tune how your raster layers are displayed by adjusting colors, context drawing, and other parameters.
-Memory and File Caching: Boost performance and reduce server load with built-in memory and file caching mechanisms.
-Concurrency Considerations: Ensure thread-safe access to shared resources and handle concurrent requests efficiently.
+- Effortless GeoTIFF Rendering: Convert GeoTIFFs into a format compatible with GeoRasterLayer for efficient display on tile-based maps.
+- Server-Side Processing Power: Utilize ASP.NET Core’s robust backend to handle requests, deliver geospatial data, and ensure smooth performance, scalability, and security.
+- Seamless Tile-Based Map Integration: Integrate rendered raster layers effortlessly into your tile-based maps, providing a familiar and interactive experience for map users.
+- Customization Options: Fine-tune how your raster layers are displayed by adjusting colors, context drawing, and other parameters.
+- Memory and File Caching: Boost performance and reduce server load with built-in memory and file caching mechanisms.
+- Concurrency Considerations: Ensure thread-safe access to shared resources and handle concurrent requests efficiently.
 
 
-Installation:
+Installation(in future):
 
 Open your ASP.NET Core project in Visual Studio.
 Go to the NuGet Package Manager (right-click on your project and select Manage NuGet Packages…).
