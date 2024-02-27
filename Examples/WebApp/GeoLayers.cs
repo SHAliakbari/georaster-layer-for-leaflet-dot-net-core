@@ -1,6 +1,8 @@
 ﻿using georaster_layer_for_leaflet_dot_net_core;
 using Microsoft.Extensions.Caching.Memory;
 using System.Collections;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -9,7 +11,7 @@ namespace WebApp
     public class GeoLayers : BackgroundService
     {
         //private static ConcurrentDictionary<string, geoLayer> pairs = new ConcurrentDictionary<string, geoLayer>();
-        //private static ConcurrentDictionary<string, object> locks = new ConcurrentDictionary<string, object>();
+        private static ConcurrentDictionary<string, object> locks = new ConcurrentDictionary<string, object>();
         private static object _lock = new object();
         private readonly IMemoryCache memoryCache;
         private readonly ILogger<GeoLayers> logger;
@@ -44,7 +46,10 @@ namespace WebApp
                 }
             }
 
-
+            keys.RemoveAll(keysToRemove.Contains);
+            object tmp;
+            foreach (var key in keysToRemove)
+                locks.TryRemove(key.ToString(), out tmp);
         }
 
         public geoLayer Get(string key, Func<geoLayer> createCallback)
@@ -52,7 +57,22 @@ namespace WebApp
             geoLayer geoLayer;
             if (!memoryCache.TryGetValue(key, out geoLayer))
             {
-                lock (_lock)
+                ///grabbing the lock for this key
+                var keyLock = locks.GetValueOrDefault(key);
+                if (keyLock==null)
+                {
+                    lock (_lock)
+                    {
+                        keyLock = locks.GetValueOrDefault(key);
+                        if (keyLock==null)
+                        {
+                            keyLock = new object();
+                            locks.TryAdd(key, keyLock);
+                        }
+                    }
+                }
+
+                lock (keyLock)
                 {
                     if (!memoryCache.TryGetValue(key, out geoLayer))
                     {
