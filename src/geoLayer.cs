@@ -5,6 +5,7 @@ using ProjNet.CoordinateSystems;
 using ProjNet;
 using SkiaSharp;
 using Leaflet;
+using System.Collections.Concurrent;
 
 namespace georaster_layer_for_leaflet_dot_net_core
 {
@@ -1146,49 +1147,91 @@ namespace georaster_layer_for_leaflet_dot_net_core
             return $"EPSG:{projection}";
         }
 
+
+        private static CoordinateSystemServices db = new CoordinateSystemServices();
+        public static object _lock = new object();
+        private static CoordinateSystemFactory csFact = new CoordinateSystemFactory();
+        private static ConcurrentDictionary<int, CoordinateSystem> coordinateSystems = new ConcurrentDictionary<int, CoordinateSystem>();
+        private CoordinateSystem GetCoordinateSystem(int id)
+        {
+            CoordinateSystem coordinateSystem;
+            if (!coordinateSystems.TryGetValue(id, out coordinateSystem))
+            {
+                lock (_lock)
+                {
+                    if (!coordinateSystems.TryGetValue(id, out coordinateSystem))
+                    {
+                        try
+                        {
+                            coordinateSystem= db.GetCoordinateSystem($"EPSG", id);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                        if (coordinateSystem == null)
+                        {
+                            string tmp = "";
+                            using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
+                            srcS.ImportFromEPSG((int)projection);
+                            srcS.ExportToWkt(out tmp, null);
+                            coordinateSystem = csFact.CreateFromWkt(tmp);
+                            srcS.Dispose();
+                        }
+                        if (coordinateSystem != null)
+                        {
+                            coordinateSystems.TryAdd(id, coordinateSystem);
+                        }
+                    }
+                }
+            }
+
+            return coordinateSystem;
+        }
+
         public MathTransform getProjector()
         {
             if (isSupportedProjection() && _projector == null)
             {
-                string tmp = "";
-                var db = new CoordinateSystemServices();
-                var csFact = new CoordinateSystemFactory();
+                //string tmp = "";
+                //var db = new CoordinateSystemServices();
+                //var csFact = new CoordinateSystemFactory();
                 var ctFactory = new CoordinateTransformationFactory();
                 int targetProjection = 4326;
-                CoordinateSystem src = null;
+                CoordinateSystem src = GetCoordinateSystem((int)projection);
 
-                try
-                {
-                    src = db.GetCoordinateSystem($"EPSG", (int)projection);
-                }
-                catch (Exception)
-                {
+                //try
+                //{
+                //    src = db.GetCoordinateSystem($"EPSG", (int)projection);
+                //}
+                //catch (Exception)
+                //{
 
-                }
-                if (src == null)
-                {
-                    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
-                    srcS.ImportFromEPSG((int)projection);
-                    srcS.ExportToWkt(out tmp, null);
-                    src = csFact.CreateFromWkt(tmp);
-                }
+                //}
+                //if (src == null)
+                //{
+                //    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
+                //    srcS.ImportFromEPSG((int)projection);
+                //    srcS.ExportToWkt(out tmp, null);
+                //    src = csFact.CreateFromWkt(tmp);
+                //}
 
-                CoordinateSystem trg = null;
-                try
-                {
-                    trg = db.GetCoordinateSystem($"EPSG", targetProjection);
-                }
-                catch (Exception)
-                {
+                CoordinateSystem trg = GetCoordinateSystem(targetProjection);
+                //try
+                //{
+                //    trg = db.GetCoordinateSystem($"EPSG", targetProjection);
+                //}
+                //catch (Exception)
+                //{
 
-                }
-                if (trg == null)
-                {
-                    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
-                    srcS.ImportFromEPSG(targetProjection);
-                    srcS.ExportToWkt(out tmp, null);
-                    trg = csFact.CreateFromWkt(tmp);
-                }
+                //}
+                //if (trg == null)
+                //{
+                //    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
+                //    srcS.ImportFromEPSG(targetProjection);
+                //    srcS.ExportToWkt(out tmp, null);
+                //    trg = csFact.CreateFromWkt(tmp);
+                //}
 
 
                 _projector = ctFactory.CreateFromCoordinateSystems(src, trg).MathTransform;
