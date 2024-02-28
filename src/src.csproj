@@ -18,9 +18,20 @@
     <PackageReference Include="SkiaSharp" Version="2.88.7" />
     <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
   </ItemGroup>
+  <PropertyGroup>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Authors>amir.aliakbari</Authors>
+    <Description>Server-Side GeoTIFF Rendering and Integration for Tile-Based Maps with ASP.NET Core</Description>
+    <PackageProjectUrl>https://github.com/SHAliakbari/georaster-layer-for-leaflet-dot-net-core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SHAliakbari/georaster-layer-for-leaflet-dot-net-core</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>leaflet;raster;tilemap;gdal;geotiff;leaflet-map;asp-net-core;gdal2tiles;webgis;geospatial-visualization;georaster;sattelite;sattelite-imagery</PackageTags>
+    <PackageReleaseNotes>performance improvements</PackageReleaseNotes>
+  </PropertyGroup>
   <ItemGroup>
-    <None Include="..\README.md" Pack="true" PackagePath="\"/>
-    <None Include="LICENSE.txt" Pack="true" PackagePath="\"/>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
