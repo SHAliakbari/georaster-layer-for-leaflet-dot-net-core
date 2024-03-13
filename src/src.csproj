@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net5.0,net6.0,net7.0,net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>georaster_layer_for_leaflet_dot_net_core</AssemblyName>
@@ -26,7 +26,7 @@
     <PackageProjectUrl>https://github.com/SHAliakbari/georaster-layer-for-leaflet-dot-net-core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/SHAliakbari/georaster-layer-for-leaflet-dot-net-core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>leaflet;raster;tilemap;gdal;geotiff;leaflet-map;asp-net-core;gdal2tiles;webgis;geospatial-visualization;georaster;sattelite;sattelite-imagery</PackageTags>
+    <PackageTags>leaflet;raster;tilemap;gdal;geotiff;leaflet-map;asp-net-core;gdal2tiles;webgis;geospatial-visualization;georaster;sattelite;sattelite-imagery;tile-generator</PackageTags>
     <PackageReleaseNotes>performance improvements</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>

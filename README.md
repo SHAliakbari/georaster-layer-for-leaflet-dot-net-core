@@ -17,7 +17,10 @@ Installation(in future):
 
 Open your ASP.NET Core project in Visual Studio.
 Go to the NuGet Package Manager (right-click on your project and select Manage NuGet Packages…).
-Search for “GeoRasterLayer-for-Leaflet-Dot-Net-Core” and install the package.
+Search for “GeoRasterLayer-for-Leaflet-Dot-Net-Core” and install the package.<a href="https://www.nuget.org/packages/georaster_layer_for_leaflet_dot_net_core">Nuget</a>
+or
+
+	dotnet add package georaster_layer_for_leaflet_dot_net_core
 
 Usage:
 
