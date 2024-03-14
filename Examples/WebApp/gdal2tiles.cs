@@ -8,13 +8,7 @@ using System.Drawing.Imaging;
 
 namespace WebApp
 {
-    public class GeoTiffPosition
-    {
-        public double MinX { get; set; }
-        public double MinY { get; set; }
-        public double MaxX { get; set; }
-        public double MaxY { get; set; }
-    }
+   
 
     public class gdal2tiles : IDisposable
     {
@@ -145,7 +139,7 @@ namespace WebApp
 
         public byte[] CreateTile(int zoom, int x, int y)
         {
-            if (geoLayer._isValidTile(new Coords { x=x, y=y, z=zoom }))
+            if (geoLayer.IsValidTile(new Coords { x=x, y=y, z=zoom }))
             {
                 //Console.WriteLine($"Generating z={zoom} x={x} y={y}");
                 return geoLayer.createTile(new Coords() { x = x, y = y, z = zoom }, null);

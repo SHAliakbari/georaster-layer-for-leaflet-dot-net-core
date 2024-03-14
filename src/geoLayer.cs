@@ -541,11 +541,13 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 var cacheKey = $"{coords.x},{coords.y},{coords.z}";
                 //if (debugLevel >= 2) log({ cacheKey });
 
-                //var mapCRS = this.getMapCRS();
+                var mapCRS = this.getMap();
                 //if (debugLevel >= 2) log({ mapCRS });
 
-                var inSimpleCRS = false;// isSimpleCRS(mapCRS);
-                                        //if (debugLevel >= 2) log({ inSimpleCRS });
+                var inSimpleCRS = false;
+                //TODO : need to check
+                inSimpleCRS = isSimpleCRS(mapCRS);
+                //if (debugLevel >= 2) log({ inSimpleCRS });
 
                 // Unpacking values for increased speed
                 //var  { rasters, xmin, xmax, ymin, ymax } = this;
@@ -569,7 +571,9 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 //if (debugLevel >= 2) log({ boundsOfTile });
 
                 //var { code } = mapCRS;
+                //TODO : need to check
                 var code = 3857;
+                //code = mapCRS;
                 //if (debugLevel >= 2) log({ code });
                 var extentOfTile = new GeoExtent(new double[] { boundsOfTile.getWest(), boundsOfTile.getSouth(), boundsOfTile.getEast(), boundsOfTile.getNorth() }, inSimpleCRS ? 0 : 4326);
                 //if (debugLevel >= 2) log({ extentOfTile });
@@ -588,6 +592,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 var extentOfTileInMapCRS = inSimpleCRS ? extentOfTile : extentOfTile.reproj(code);
                 //if (debugLevel >= 2) log({ extentOfTileInMapCRS });
 
+                //TODO : need to document for extent
                 var extentOfInnerTileInMapCRS = extentOfTileInMapCRS.crop(inSimpleCRS ? extentOfLayer : extent);
 
                 if (extentOfInnerTileInMapCRS == null) return null;
@@ -776,7 +781,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 var widthOfSampleInScreenPixels = innerTileWidth / numberOfSamplesAcross;
                 var widthOfSampleInScreenPixelsInt = Math.Ceiling(widthOfSampleInScreenPixels);
 
-                var map = getMap();
+                //var map = getMap();
                 var tileSize = getTileSize();
 
                 // this converts tile coordinates (how many tiles down and right)
@@ -832,7 +837,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                         {
                             var yCenterInMapPixels = yTopOfInnerTile + (h + 0.5) * heightOfSampleInScreenPixels;
                             var latWestPoint = new Point(xLeftOfInnerTile, yCenterInMapPixels);
-                            var lat = map.pointToLatLng(Point.toPoint(latWestPoint), (int)zoom).Lat;
+                            var lat = mapCRS.pointToLatLng(Point.toPoint(latWestPoint), (int)zoom).Lat;
                             if (lat > yMinOfLayer && lat < yMaxOfLayer)
                             {
                                 var yInTilePixels = Math.Round(h * heightOfSampleInScreenPixels) + Math.Min(padding.top, 0) + (padding.top > 0 ? padding.top : 0);
@@ -849,7 +854,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                                          xLeftOfInnerTile + (w + 0.5) * widthOfSampleInScreenPixels,
                                          yCenterInMapPixels
                                      );
-                                    var xOfLayer = map.pointToLatLng(Leaflet.geometry.Point.toPoint(latLngPoint), (int)zoom).Lng;
+                                    var xOfLayer = mapCRS.pointToLatLng(Leaflet.geometry.Point.toPoint(latLngPoint), (int)zoom).Lng;
                                     if (xOfLayer > xMinOfLayer && xOfLayer < xMaxOfLayer)
                                     {
                                         var xInRasterPixels = 0;
@@ -906,7 +911,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                                             options.customDrawFunction(new CustomDrawFunctionModel
                                             {
                                                 Canvas = canvas,
-                                               Values = values,
+                                                Values = values,
                                                 //context,
                                                 x= x,
                                                 y=y,
@@ -919,6 +924,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                                                 sampledRaster = tileRasters
                                             });
                                         }
+                                        //TODO : check and test
                                         //else
                                         //{
                                         //    var color = this.getColor(values);
@@ -947,6 +953,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                         //}
                     }
 
+                    //TODO : mask implementation
                     //if (this.mask)
                     //{
                     //    if (inSimpleCRS)
@@ -975,6 +982,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 }
                 catch (Exception e)
                 {
+                    //TODO : Exception handling
                     Console.Error.WriteLine(e);
                     error = e;
                 }
@@ -986,6 +994,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
             }
             catch (Exception error)
             {
+                //TODO : Exception handling
                 Console.Error.WriteLine(error);
                 //done && done(error, tile);
             }
@@ -1021,7 +1030,12 @@ namespace georaster_layer_for_leaflet_dot_net_core
         }
 
 
+        [Obsolete("Use IsValid method", true)]
         public bool _isValidTile(Coords coords)
+        {
+            return IsValidTile(coords);
+        }
+        public bool IsValidTile(Coords coords)
         {
             var crs = getMap();
 
@@ -1200,39 +1214,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
                 int targetProjection = 4326;
                 CoordinateSystem src = GetCoordinateSystem((int)projection);
 
-                //try
-                //{
-                //    src = db.GetCoordinateSystem($"EPSG", (int)projection);
-                //}
-                //catch (Exception)
-                //{
-
-                //}
-                //if (src == null)
-                //{
-                //    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
-                //    srcS.ImportFromEPSG((int)projection);
-                //    srcS.ExportToWkt(out tmp, null);
-                //    src = csFact.CreateFromWkt(tmp);
-                //}
-
                 CoordinateSystem trg = GetCoordinateSystem(targetProjection);
-                //try
-                //{
-                //    trg = db.GetCoordinateSystem($"EPSG", targetProjection);
-                //}
-                //catch (Exception)
-                //{
-
-                //}
-                //if (trg == null)
-                //{
-                //    using OSGeo.OSR.SpatialReference srcS = new OSGeo.OSR.SpatialReference(null);
-                //    srcS.ImportFromEPSG(targetProjection);
-                //    srcS.ExportToWkt(out tmp, null);
-                //    trg = csFact.CreateFromWkt(tmp);
-                //}
-
 
                 _projector = ctFactory.CreateFromCoordinateSystems(src, trg).MathTransform;
             }
@@ -1246,9 +1228,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
             if (options == null) options = this.options;
             if (_bounds == null)
             {
-                //var  { debugLevel, height, width, projection, xmin, xmax, ymin, ymax } = this;
-                // check if map using Simple CRS
-                //if (isSimpleCRS(this.getMapCRS()))
+
                 if (false)
                 {
                     if (height == width)
