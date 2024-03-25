@@ -115,31 +115,46 @@ namespace nUnitTests
         [Test]
         public void TestBounds()
         {
-            var geoRasterLayerOptions = new GeoRasterLayerOptions()
+            geoLayer tmp = new geoLayer(new GeoRasterLayerOptions()
             {
                 georaster = georaster,
                 resolution= 256 // optional parameter for adjusting display resolution
-            };
-            geoLayer tmp = new geoLayer(geoRasterLayerOptions);
-            tmp.initialize(geoRasterLayerOptions);
+            });
 
             var bounds = tmp.getBounds();
-            Assert.That(System.Math.Round( bounds.getSouthEast().Lat,2), Is.EqualTo(-35.45));
-            Assert.That(System.Math.Round(bounds.getSouthEast().Lng, 2), Is.EqualTo( -53.17));
-            Assert.That(System.Math.Round(bounds.getNorthWest().Lat,2), Is.EqualTo(13.14));
+            Assert.That(System.Math.Round(bounds.getSouthEast().Lat, 2), Is.EqualTo(-35.45));
+            Assert.That(System.Math.Round(bounds.getSouthEast().Lng, 2), Is.EqualTo(-53.17));
+            Assert.That(System.Math.Round(bounds.getNorthWest().Lat, 2), Is.EqualTo(13.14));
             Assert.That(System.Math.Round(bounds.getNorthWest().Lng, 2), Is.EqualTo(-161.79));
+            tmp.Dispose();
+        }
+
+        [Test]
+        public void TestBoundsInProj84()
+        {
+            geoLayer tmp = new geoLayer(new GeoRasterLayerOptions()
+            {
+                georaster = georaster,
+                resolution= 256 // optional parameter for adjusting display resolution
+            });
+
+            SimplePoint bounds = tmp.getTopLeftPointInProj("8439",zoom = 8);
+
+            Assert.That(System.Math.Round(bounds.getSouthEast().Lat, 2), Is.EqualTo(-35.45));
+            Assert.That(System.Math.Round(bounds.getSouthEast().Lng, 2), Is.EqualTo(-53.17));
+            Assert.That(System.Math.Round(bounds.getNorthWest().Lat, 2), Is.EqualTo(13.14));
+            Assert.That(System.Math.Round(bounds.getNorthWest().Lng, 2), Is.EqualTo(-161.79));
+            tmp.Dispose();
         }
 
         [Test]
         public void TestgetProjector()
         {
-            var geoRasterLayerOptions = new GeoRasterLayerOptions()
+            geoLayer tmp = new geoLayer(new GeoRasterLayerOptions()
             {
                 georaster = georaster,
                 resolution= 256 // optional parameter for adjusting display resolution
-            };
-            geoLayer tmp = new geoLayer(geoRasterLayerOptions);
-            tmp.initialize(geoRasterLayerOptions);
+            });
 
             var proj = tmp.getProjector();
             //TODO : check WKT value
@@ -149,13 +164,11 @@ namespace nUnitTests
         [Test]
         public void TestIsValidTile()
         {
-            var geoRasterLayerOptions = new GeoRasterLayerOptions()
+            geoLayer tmp = new geoLayer(new GeoRasterLayerOptions()
             {
                 georaster = georaster,
                 resolution= 256 // optional parameter for adjusting display resolution
-            };
-            geoLayer tmp = new geoLayer(geoRasterLayerOptions);
-            tmp.initialize(geoRasterLayerOptions);
+            });
 
             Assert.That(tmp.IsValidTile(new Coords { x = 199, y = 200, z = 8 }), Is.EqualTo(false));
             Assert.That(tmp.IsValidTile(new Coords { x = 199, y = 200, z = 8 }), Is.EqualTo(false));

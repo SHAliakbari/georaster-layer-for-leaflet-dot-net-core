@@ -125,7 +125,7 @@ namespace WebApp
                 };
 
                 geoLayer tmp = new geoLayer(geoRasterLayerOptions);
-                tmp.initialize(geoRasterLayerOptions);
+                //tmp.initialize(geoRasterLayerOptions);
                 return tmp;
 
             });

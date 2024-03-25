@@ -207,6 +207,7 @@ namespace georaster_layer_for_leaflet_dot_net_core
         public geoLayer(GeoRasterLayerOptions options)
         {
             this.options = options;
+            initialize(options);
 
         }
 
